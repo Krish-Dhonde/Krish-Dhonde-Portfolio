@@ -16,18 +16,20 @@ const useWindowStore = create(
         state.nextZindex++;
     }),
 
-    closeWindow: (windowKey, data = null) => {
+    closeWindow: (windowKey, data = null) => set((state) => {
         const win = state.windows[windowKey];
         if (!win) return;
         win.isOpen = false;
         win.zIndex = INITIAL_Z_INDEX;
         win.data = null;
-    },
+    }),
 
-    focusWindow: (windowKey, data = null) => {
+    focusWindow: (windowKey, data = null) => set((state) => {
         const win = state.windows[windowKey];
-        win.zIndex = state.nextZindex++;
-    },
+        if (win) {
+            win.zIndex = state.nextZindex++;
+        }
+    }),
   })),
 );
 
