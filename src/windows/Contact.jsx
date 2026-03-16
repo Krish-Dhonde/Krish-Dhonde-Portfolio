@@ -15,9 +15,9 @@ const Contact = () => {
         <h3>Let's Connect...</h3>
         <div className="flex items-center gap-6">
           <img
-            src="/images/adrian.jpg"
+            src="/images/adrian.jpeg"
             alt="Adrian"
-            className="w-22 rounded-full"
+            className="w-24 rounded-full"
           />
           <p>
             I'm always open to new opportunities, collaborations, and
@@ -30,7 +30,7 @@ const Contact = () => {
             {" "}
             <span className="font-semibold">Email:</span>{" "}
             <span className="text-blue-500 italic">
-              krishdhonde25@gmai.com{" "}
+              krishdhonde25@gmail.com{" "}
             </span>
           </p>
           <p>
