@@ -2,6 +2,8 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 html,
 body {
   width: 100dvw;
@@ -66,13 +68,13 @@ body {
   }
 
   #welcome {
-    @apply text-gray-200 flex flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none w-fit h-fit max-sm:h-dvh max-sm:w-dvw max-sm:px-10 max-sm:z-50;
+    @apply text-gray-200 flex flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none w-fit h-fit max-sm:h-dvh max-sm:w-dvw max-sm:px-10 max-sm:z-50 transition-colors duration-300;
 
     .small-screen {
-      @apply hidden max-sm:flex m-7 bg-red-300/20 backdrop-blur-lg p-3 rounded-md absolute top-10 w-[90%];
+      @apply hidden max-sm:flex m-7 bg-red-300/20 dark:bg-red-500/10 backdrop-blur-lg p-3 rounded-md absolute top-10 w-[90%] transition-colors duration-300;
 
       p {
-        @apply flex-1 text-[16px] text-center font-roboto text-gray-400;
+        @apply flex-1 text-[16px] text-center font-roboto text-gray-600 dark:text-gray-400 transition-colors;
       }
     }
     
@@ -85,11 +87,11 @@ body {
     @apply absolute bottom-2 lg:bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden;
 
     .dock-container {
-      @apply bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
+      @apply bg-white/50 dark:bg-black/40 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5 border border-white/20 dark:border-white/10 transition-colors duration-300;
     }
 
     .tooltip {
-      @apply !py-1 !px-3 !w-fit !text-center !text-xs !rounded-md !bg-blue-200 !text-blue-900 !shadow-2xl;
+      @apply !py-1 !px-3 !w-fit !text-center !text-xs !rounded-md !bg-blue-100 dark:!bg-blue-900 !text-blue-900 dark:!text-blue-100 !shadow-2xl transition-colors duration-300;
     }
 
     .dock-icon {
@@ -118,25 +120,25 @@ body {
   }
 
   #window-header {
-    @apply flex items-center justify-between px-4 py-3 rounded-t-lg bg-gray-50 border-b border-gray-200 select-none text-sm text-gray-400;
+    @apply flex items-center justify-between px-4 py-3 rounded-t-lg bg-gray-50 border-b border-gray-200 select-none text-sm text-gray-400 dark:bg-[#2d2d2d] dark:border-gray-700 transition-colors duration-300;
   }
 
   #safari {
-    @apply w-[90vw] max-w-4xl absolute top-40 left-[5vw] lg:left-2/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden;
+    @apply w-[90vw] max-w-4xl absolute top-40 left-[5vw] lg:left-2/12 bg-white dark:bg-[#1e1e1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden transition-colors duration-300;
 
     .search {
-      @apply flex items-center gap-3 w-2/3 bg-white border border-gray-300 rounded-lg px-3 py-2;
+      @apply flex items-center gap-3 w-2/3 bg-white dark:bg-[#2A2A2A] border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 transition-colors duration-300;
 
       input {
-        @apply placeholder:text-gray-400;
+        @apply placeholder:text-gray-400 dark:text-gray-200 dark:placeholder:text-gray-500 bg-transparent outline-none w-full;
       }
     }
 
     .blog {
-      @apply bg-white p-10 max-w-3xl mx-auto;
+      @apply bg-white dark:bg-[#1e1e1e] p-10 max-w-3xl mx-auto transition-colors duration-300;
 
       h2 {
-        @apply text-xl font-bold text-pink-600 mb-10;
+        @apply text-xl font-bold text-pink-600 dark:text-pink-400 mb-10;
       }
 
       .blog-post {
@@ -150,15 +152,15 @@ body {
           @apply col-span-10 space-y-3;
 
           p {
-            @apply text-xs text-gray-500;
+            @apply text-xs text-gray-500 dark:text-gray-400;
           }
 
           h3 {
-            @apply font-semibold text-base text-gray-800;
+            @apply font-semibold text-base text-gray-800 dark:text-gray-200;
           }
 
           a {
-            @apply text-blue-600 text-xs hover:underline flex items-center gap-3;
+            @apply text-blue-600 dark:text-blue-400 text-xs hover:underline flex items-center gap-3;
           }
         }
       }
@@ -166,39 +168,43 @@ body {
   }
 
   #terminal {
-    @apply w-[90vw] max-w-xl absolute top-32 left-[5vw] lg:left-1/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden;
+    @apply w-[90vw] max-w-xl absolute top-32 left-[5vw] lg:left-1/12 bg-white dark:bg-[#1e1e1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden transition-colors duration-300;
+
+    #window-header {
+        @apply dark:bg-[#2d2d2d] dark:border-gray-700;
+    }
 
     h2 {
-      @apply font-bold text-sm text-center w-full;
+      @apply font-bold text-sm text-center w-full dark:text-gray-300;
     }
 
     .techstack {
       @apply text-sm font-roboto p-5;
 
       .label {
-        @apply flex items-center ms-10 mt-7;
+        @apply flex items-center ms-10 mt-7 dark:text-gray-300;
       }
 
       .content {
-        @apply py-5 my-5 border-y border-dashed space-y-1;
+        @apply py-5 my-5 border-y border-dashed dark:border-gray-700 space-y-1;
 
         li {
           .check {
-            @apply text-[#00A154] w-5;
+            @apply text-[#00A154] dark:text-[#2acb42] w-5;
           }
 
           h3 {
-            @apply font-semibold text-[#00A154] w-32 ms-5;
+            @apply font-semibold text-[#00A154] dark:text-[#2acb42] w-32 ms-5;
           }
 
           ul {
-            @apply flex items-center gap-3;
+            @apply flex items-center gap-3 dark:text-gray-300;
           }
         }
       }
 
       .footnote {
-        @apply text-[#00A154] space-y-1;
+        @apply text-[#00A154] dark:text-[#2acb42] space-y-1;
 
         p {
           @apply flex items-center;
@@ -212,14 +218,14 @@ body {
   }
 
   #contact {
-    @apply w-[90vw] max-w-2xl absolute top-60 left-[5vw] lg:left-5/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden;
+    @apply w-[90vw] max-w-2xl absolute top-60 left-[5vw] lg:left-5/12 bg-white dark:bg-[#1e1e1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden transition-colors duration-300;
 
     h2 {
-      @apply font-bold text-sm text-center w-full;
+      @apply font-bold text-sm text-center w-full dark:text-gray-300;
     }
 
     h3 {
-      @apply text-xl font-semibold;
+      @apply text-xl font-semibold dark:text-white;
     }
 
     ul {
@@ -243,30 +249,30 @@ body {
     @apply w-[90vw] max-w-3xl absolute top-32 left-[5vw] lg:left-1/4 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden;
     
     #window-header {
-      @apply border-b border-gray-200;
+      @apply border-b border-gray-200 dark:border-gray-700;
     }
   }
 
   #photos {
-    @apply w-[90vw] max-w-3xl absolute top-96 left-1/2 -translate-y-1/2 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden;
+    @apply w-[90vw] max-w-3xl absolute top-96 left-1/2 -translate-y-1/2 bg-white dark:bg-[#1e1e1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden transition-colors duration-300;
 
     .sidebar {
-      @apply w-3/12 flex-none bg-gray-50 border-r border-gray-200 flex flex-col p-5;
+      @apply w-3/12 flex-none bg-gray-50 dark:bg-[#252525] border-r border-gray-200 dark:border-gray-800 flex flex-col p-5 transition-colors duration-300;
 
       h2 {
-        @apply text-xs font-medium text-gray-400 mb-1;
+        @apply text-xs font-medium text-gray-400 dark:text-gray-500 mb-1;
       }
 
       ul {
         li {
-          @apply flex space-y-1 items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors;
+          @apply flex space-y-1 items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors dark:text-gray-300 dark:hover:bg-[#333];
 
           &:first-child {
-            @apply bg-blue-100 text-blue-700;
+            @apply bg-blue-100 dark:bg-blue-600 text-blue-700 dark:text-white;
           }
 
           img {
-            @apply w-4;
+            @apply w-4 dark:invert;
           }
 
           p {
@@ -308,34 +314,34 @@ body {
   }
 
   #resume {
-    @apply w-fit max-w-[90vw] h-fit absolute top-16 left-[5vw] lg:left-7/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden;
+    @apply w-fit max-w-[90vw] h-fit absolute top-16 left-[5vw] lg:left-7/12 bg-white dark:bg-[#1e1e1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden transition-colors duration-300;
 
     #window-header {
       h2 {
-        @apply font-bold text-sm text-center flex-1;
+        @apply font-bold text-sm text-center flex-1 dark:text-gray-300;
       }
     }
   }
 
   #finder {
-    @apply absolute w-[90vw] max-w-3xl left-[5vw] lg:left-40 top-20 shadow-2xl drop-shadow-2xl overflow-hidden rounded-xl max-sm:hidden;
+    @apply absolute w-[90vw] max-w-3xl left-[5vw] lg:left-40 top-20 shadow-2xl drop-shadow-2xl overflow-hidden rounded-xl max-sm:hidden transition-colors duration-300;
 
     .sidebar {
-      @apply w-48 bg-gray-50 border-r border-gray-200 flex flex-col p-5 space-y-3;
+      @apply w-48 bg-gray-50 dark:bg-[#252525] border-r border-gray-200 dark:border-gray-800 flex flex-col p-5 space-y-3 transition-colors duration-300;
 
       h3 {
-        @apply text-xs font-medium text-gray-400 mb-1;
+        @apply text-xs font-medium text-gray-400 dark:text-gray-500 mb-1;
       }
 
       ul {
         @apply space-y-1;
 
         .active {
-          @apply bg-blue-100 text-blue-700;
+          @apply bg-blue-100 dark:bg-blue-600 text-blue-700 dark:text-white;
         }
 
         .not-active {
-          @apply text-gray-700 hover:bg-gray-200;
+          @apply text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#333];
         }
 
         li {
@@ -345,7 +351,7 @@ body {
     }
 
     .content {
-      @apply flex-1 p-8 bg-white max-w-2xl relative;
+      @apply flex-1 p-8 bg-white dark:bg-[#1e1e1e] max-w-2xl relative transition-colors duration-300;
 
       li {
         @apply absolute flex items-center flex-col gap-3;
@@ -355,31 +361,31 @@ body {
         }
 
         p {
-          @apply text-sm text-center font-medium w-40;
+          @apply text-sm text-center font-medium w-40 dark:text-gray-200;
         }
       }
     }
   }
 
   #txtfile {
-    @apply w-[90vw] max-w-md absolute top-36 left-[5vw] lg:left-auto lg:right-32 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden;
+    @apply w-[90vw] max-w-md absolute top-36 left-[5vw] lg:left-auto lg:right-32 bg-white dark:bg-[#1e1e1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden transition-colors duration-300;
 
     h2 {
-      @apply font-bold text-sm text-center w-full;
+      @apply font-bold text-sm text-center w-full dark:text-gray-200;
     }
   }
 
   #imgfile {
-    @apply w-[90vw] max-w-xl absolute top-40 left-[5vw] lg:left-2/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden;
+    @apply w-[90vw] max-w-xl absolute top-40 left-[5vw] lg:left-2/12 bg-white dark:bg-[#1e1e1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden max-sm:hidden transition-colors duration-300;
 
     #window-header {
       p {
-        @apply font-bold text-[#5f6266];
+        @apply font-bold text-[#5f6266] dark:text-gray-300;
       }
     }
 
     .preview {
-      @apply p-2 bg-gray-200 max-h-[70vh];
+      @apply p-2 bg-gray-200 dark:bg-[#111] max-h-[70vh] transition-colors duration-300;
 
       img {
         @apply w-full h-fit object-contain object-center;
@@ -392,14 +398,15 @@ body {
 
     ul {
       li {
-        @apply absolute z-0 select-none flex items-center flex-col cursor-pointer;
+        @apply absolute z-0 select-none flex items-center flex-col cursor-pointer group;
 
         img {
-          @apply w-12 md:w-16 group-hover:bg-gray-950/10 p-1 rounded-md;
+          @apply w-12 md:w-16 group-hover:bg-black/20 dark:group-hover:bg-white/20 p-1 rounded-md transition-colors duration-300;
         }
 
         p {
-          @apply text-xs md:text-sm text-white text-center px-1 mt-1 rounded-md group-hover:bg-blue-500 transition-colors max-w-40;
+          @apply text-xs md:text-sm text-white font-medium text-center px-1 mt-1 rounded-md group-hover:bg-blue-500 transition-colors max-w-40;
+          text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
         }
       }
     }
