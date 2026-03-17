@@ -15,8 +15,8 @@ const Contact = () => {
         <h3>Let's Connect...</h3>
         <div className="flex items-center gap-6">
           <img
-            src="/images/adrian.jpeg"
-            alt="Adrian"
+            src="/images/krish.jpeg"
+            alt="krish"
             className="w-24 rounded-full"
           />
           <p>

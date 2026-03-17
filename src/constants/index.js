@@ -138,7 +138,7 @@ const socials = [
     text: "Github",
     icon: "/icons/github.svg",
     bg: "#f4656b",
-    link: "https://github.com/JavaScript-Mastery-Pro",
+    link: "https://github.com/Krish-Dhonde",
   },
   {
     id: 2,
@@ -159,7 +159,7 @@ const socials = [
     text: "LinkedIn",
     icon: "/icons/linkedin.svg",
     bg: "#05b6f6",
-    link: "#",
+    link: "https://www.linkedin.com/in/krish-dhonde-a75a6b301/",
   },
 ];
 
@@ -403,7 +403,7 @@ const ABOUT_LOCATION = {
       kind: "file",
       fileType: "img",
       position: "top-10 left-5",
-      imageUrl: "/images/adrian.jpeg",
+      imageUrl: "/images/krish.jpeg",
     },
     {
       id: 2,
@@ -412,7 +412,7 @@ const ABOUT_LOCATION = {
       kind: "file",
       fileType: "img",
       position: "top-28 right-72",
-      imageUrl: "/images/adrian-2.jpeg",
+      imageUrl: "/images/krish-2.jpeg",
     },
     {
       id: 3,
@@ -431,7 +431,7 @@ const ABOUT_LOCATION = {
       fileType: "txt",
       position: "top-60 left-5",
       subtitle: "Meet the Developer Behind the Code",
-      image: "/images/adrian.jpeg",
+      image: "/images/krish.jpeg",
       description: [
         "#",
       ],

@@ -3,10 +3,19 @@ import useWindowStore from "#store/window";
 import useThemeStore from "#store/theme";
 import { Sun, Moon } from "lucide-react";
 import dayjs from "dayjs";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const { openWindow } = useWindowStore();
   const { theme, setTheme } = useThemeStore();
+  const [time, setTime] = useState(dayjs());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(dayjs());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -44,7 +53,7 @@ const Navbar = () => {
             ))}
           </ul>
 
-          <time className="dark:text-white transition-colors">{dayjs().format("ddd MMM D h:mm A")}</time>
+          <time className="dark:text-white transition-colors">{time.format("ddd MMM D h:mm A")}</time>
       </div>
     </nav>
   );
