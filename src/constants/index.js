@@ -194,19 +194,19 @@ const photosLinks = [
 const gallery = [
   {
     id: 1,
-    img: "/images/gal1.png",
+    img: "/images/krish.jpeg",
   },
   {
     id: 2,
-    img: "/images/gal2.png",
+    img: "/images/krish-2.jpeg",
   },
   {
     id: 3,
-    img: "/images/gal3.png",
+    img: "/images/Devthon.jpeg",
   },
   {
     id: 4,
-    img: "/images/gal4.png",
+    img: "/images/Cloud_Badge.jpeg",
   },
 ];
 
@@ -231,7 +231,7 @@ const WORK_LOCATION = {
     // ▶ Project 1
     {
       id: 5,
-      name: "Nike Ecommerce Website Application",
+      name: "RailBhoomi",
       icon: "/images/folder.png",
       kind: "folder",
       position: "top-10 left-5", // icon position inside Finder
@@ -284,7 +284,7 @@ const WORK_LOCATION = {
     // ▶ Project 2
     {
       id: 6,
-      name: "AI Resume Analyzer",
+      name: "S2S: Step Towards Solution",
       icon: "/images/folder.png",
       kind: "folder",
       position: "top-52 right-80",
@@ -337,7 +337,7 @@ const WORK_LOCATION = {
     // ▶ Project 3
     {
       id: 7,
-      name: "Food Delivery App",
+      name: "Mechanical-GPT",
       icon: "/images/folder.png",
       kind: "folder",
       position: "top-10 left-80",
