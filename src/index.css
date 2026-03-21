@@ -357,7 +357,11 @@ body {
         @apply absolute flex items-center flex-col gap-3;
 
         img {
-          @apply object-contain object-center size-16 relative group-hover:scale-105;
+          @apply object-contain object-center size-16 relative transition-transform duration-300;
+        }
+
+        &:hover img {
+          @apply scale-105;
         }
 
         p {
@@ -398,15 +402,23 @@ body {
 
     ul {
       li {
-        @apply absolute z-0 select-none flex items-center flex-col cursor-pointer group;
+        @apply absolute z-0 select-none flex items-center flex-col cursor-pointer;
 
         img {
-          @apply w-12 md:w-16 group-hover:bg-black/20 dark:group-hover:bg-white/20 p-1 rounded-md transition-colors duration-300;
+          @apply w-12 md:w-16 p-1 rounded-md transition-colors duration-300;
+        }
+
+        &:hover img {
+          @apply bg-black/20 dark:bg-white/20;
         }
 
         p {
-          @apply text-xs md:text-sm text-white font-medium text-center px-1 mt-1 rounded-md group-hover:bg-blue-500 transition-colors max-w-40;
+          @apply text-xs md:text-sm text-white font-medium text-center px-1 mt-1 rounded-md transition-colors max-w-40;
           text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        &:hover p {
+          @apply bg-blue-500;
         }
       }
     }
