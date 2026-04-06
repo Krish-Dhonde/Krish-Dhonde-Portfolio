@@ -69,21 +69,28 @@ const Safari = () => {
         <h2>My Developer Blogs</h2>
 
         <div className="space-y-8">
-          {blogPosts.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase())).map(({ id, image, title, date, link }) => (
-            <div key={id} className="blog-post">
-              <div className="col-span-2">
-                <img src={image} alt={title} />
-              </div>
+          {blogPosts.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase())).length > 0 ? (
+            blogPosts.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase())).map(({ id, image, title, date, link }) => (
+              <div key={id} className="blog-post">
+                <div className="col-span-2">
+                  <img src={image} alt={title} />
+                </div>
 
-              <div className="content">
-                <p>{date}</p>
-                <h3>{title}</h3>
-                <a href={link} target="_blank" rel="noopener noreferrer">
-                  Read More <MoveRight className="icon-hover" />
-                </a>
+                <div className="content">
+                  <p>{date}</p>
+                  <h3>{title}</h3>
+                  <a href={link} target="_blank" rel="noopener noreferrer">
+                    Read More <MoveRight className="icon-hover" />
+                  </a>
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+              <Search size={48} className="mb-4 opacity-20" />
+              <p>No articles found</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </>
