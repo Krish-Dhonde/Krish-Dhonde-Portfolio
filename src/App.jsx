@@ -4,11 +4,13 @@ import gsap from "gsap";
 import { Finder, Resume, Safari, Terminal, Text, Image, Contact, Settings } from "#windows";
 import useWallpaperStore from "#store/wallpaper";
 import useThemeStore from "#store/theme";
+import useSoundEffects from "./hooks/useSoundEffects";
 import { useEffect } from "react";
 
 gsap.registerPlugin(Draggable);
 
 const App = () => {
+  useSoundEffects(); // Initialize global click sound
   const { wallpaper } = useWallpaperStore();
   const { theme } = useThemeStore();
 

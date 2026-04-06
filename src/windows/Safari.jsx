@@ -12,9 +12,24 @@ import {
   Share,
   ShieldHalf,
 } from "lucide-react";
-import React from "react";
+import React, { useMemo, useState } from "react";
+import { Howl } from "howler";
 
 const Safari = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const type1Sound = useMemo(() => new Howl({ src: ['/sounds/type-1.wav'], html5: true }), []);
+  const type2Sound = useMemo(() => new Howl({ src: ['/sounds/type-2.wav'], html5: true }), []);
+
+  const handleTyping = (e) => {
+    if (e.key !== 'Shift' && e.key !== 'Control' && e.key !== 'Alt' && e.key !== 'Meta') {
+      if (Math.random() > 0.5) {
+        type1Sound.play();
+      } else {
+        type2Sound.play();
+      }
+    }
+  };
+
   return (
     <>
       <div id="window-header">
@@ -35,7 +50,10 @@ const Safari = () => {
             <input
               type="text"
               placeholder="Search or enter website name"
-              className="flex-1"
+              className="flex-1 outline-none bg-transparent"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleTyping}
             />
           </div>
         </div>
@@ -51,7 +69,7 @@ const Safari = () => {
         <h2>My Developer Blogs</h2>
 
         <div className="space-y-8">
-          {blogPosts.map(({ id, image, title, date, link }) => (
+          {blogPosts.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase())).map(({ id, image, title, date, link }) => (
             <div key={id} className="blog-post">
               <div className="col-span-2">
                 <img src={image} alt={title} />
