@@ -38,12 +38,21 @@ body {
 }
 
 @layer base {
+  .search-backdrop {
+    /* To adjust the blur intensity, change 'backdrop-blur-xl' below. Options: -sm, -md, -lg, -xl, -2xl, -3xl */
+    @apply fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-xs opacity-0 transition-opacity duration-300 pointer-events-auto z-[999];
+    
+    &.active {
+      @apply opacity-100;
+    }
+  }
+
   main {
     @apply w-dvw h-dvh overflow-hidden;
   }
 
   nav {
-    @apply flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none;
+    @apply flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none sticky top-0 z-[1000];
 
     div {
       @apply flex items-center max-sm:w-full max-sm:justify-center gap-5;
@@ -54,7 +63,7 @@ body {
     }
 
     .search-capsule {
-      @apply relative flex items-center gap-2 bg-white/40 dark:bg-white/10 rounded-full cursor-text border border-gray-300/50 dark:border-white/15 px-3 h-8 transition-all duration-300 w-36;
+      @apply relative flex items-center gap-2 bg-white/40 dark:bg-white/10 rounded-full cursor-text border border-gray-300/50 dark:border-white/15 px-3 h-8 transition-all duration-300 w-36 z-[1001];
 
       &.active {
         @apply w-56 md:w-72 bg-white/70 dark:bg-white/15 border-gray-400/50 dark:border-white/25 shadow-md;
@@ -65,7 +74,7 @@ body {
       }
 
       .search-dropdown {
-        @apply absolute top-[calc(100%+8px)] left-0 w-full min-w-[240px] bg-white/90 dark:bg-[#1c1c1e]/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/60 dark:border-white/10 overflow-hidden z-[9999] flex flex-col pb-2;
+        @apply absolute top-[calc(100%+8px)] left-0 w-full min-w-[240px] bg-white/90 dark:bg-[#1c1c1e]/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/60 dark:border-white/10 overflow-hidden z-[1002] flex flex-col pb-2;
         animation: dropdown-in 0.15s ease-out;
       }
 

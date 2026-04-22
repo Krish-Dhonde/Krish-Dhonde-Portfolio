@@ -1,25 +1,60 @@
-import { navLinks, navIcons, dockApps } from "#constants";
+import { navLinks, navIcons, dockApps, locations } from "#constants";
 import useWindowStore from "#store/window";
 import useThemeStore from "#store/theme";
+import useLocationStore from "#store/location";
 import { Sun, Moon, Search, X } from "lucide-react";
 import dayjs from "dayjs";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Howl } from "howler";
+import { createPortal } from "react-dom";
 
-// Build a flat searchable index from all openable apps + navLinks
-const SEARCH_INDEX = [
-  ...navLinks.map((l) => ({ id: `nav-${l.id}`, name: l.name, type: l.type, icon: null })),
-  ...dockApps
-    .filter((a) => a.canOpen)
-    .map((a) => ({ id: `dock-${a.id}`, name: a.name, type: a.id, icon: `/icons/${a.icon}` })),
-].reduce((acc, item) => {
-  if (!acc.find((x) => x.type === item.type)) acc.push(item);
-  return acc;
-}, []);
+// Build a flat searchable index from all openable apps + navLinks + locations
+const getSearchIndex = () => {
+  const index = [
+    ...navLinks.map((l) => ({ id: `nav-${l.id}`, name: l.name, type: l.type, category: "Menu" })),
+    ...dockApps
+      .filter((a) => a.canOpen)
+      .map((a) => ({ id: `dock-${a.id}`, name: a.name, type: a.id, icon: `/icons/${a.icon}`, category: "App" })),
+    // Add Locations (About, Work, Resume, etc.)
+    ...Object.values(locations).map(loc => ({
+      id: `loc-${loc.id}`,
+      name: loc.name,
+      type: "finder",
+      location: loc,
+      category: "Location",
+      icon: loc.icon
+    })),
+    // Add individual projects from Work location
+    ...(locations.work?.children || []).map(proj => ({
+      id: `proj-${proj.id}`,
+      name: proj.name,
+      type: "finder",
+      location: proj,
+      category: "Project",
+      icon: proj.icon
+    })),
+    // Add specific settings options
+    { id: "set-wallpaper", name: "Settings: Wallpaper", type: "settings", data: "wallpaper", category: "Settings", icon: "/icons/settings.png" },
+    { id: "set-appearance", name: "Settings: Appearance", type: "settings", data: "appearance", category: "Settings", icon: "/icons/settings.png" },
+    { id: "set-audio", name: "Settings: Audio", type: "settings", data: "audio", category: "Settings", icon: "/icons/settings.png" },
+  ];
+
+  // Remove duplicates by type/location combo
+  return index.reduce((acc, item) => {
+    const isDuplicate = acc.find(x => 
+      x.name === item.name && x.type === item.type
+    );
+    if (!isDuplicate) acc.push(item);
+    return acc;
+  }, []);
+};
+
+const SEARCH_INDEX = getSearchIndex();
 
 const Navbar = () => {
   const { openWindow } = useWindowStore();
   const { theme, setTheme } = useThemeStore();
+  const { setActiveLocation } = useLocationStore();
   const [time, setTime] = useState(dayjs());
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -33,6 +68,14 @@ const Navbar = () => {
     const timer = setInterval(() => setTime(dayjs()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (isSearchOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isSearchOpen]);
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -57,16 +100,21 @@ const Navbar = () => {
     }
   };
 
-  const openSearchResult = (type) => {
-    openWindow(type);
+  const openSearchResult = (item) => {
+    if (item.location) {
+      setActiveLocation(item.location);
+    }
+    openWindow(item.type, item.data || null);
     setSearchQuery("");
     setIsSearchOpen(false);
   };
 
   const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return SEARCH_INDEX;
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return SEARCH_INDEX.slice(0, 8); // Show first 8 items if empty
     return SEARCH_INDEX.filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      item.name.toLowerCase().includes(query) || 
+      item.category?.toLowerCase().includes(query)
     );
   }, [searchQuery]);
 
@@ -117,7 +165,7 @@ const Navbar = () => {
             {searchResults.length > 0 ? (
               <>
                 <p className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-                  {searchQuery ? "Results" : "All Apps"}
+                  {searchQuery ? "Results" : "Suggested"}
                 </p>
                 {searchResults.map((item) => (
                   <button
@@ -125,22 +173,29 @@ const Navbar = () => {
                     className="search-result-item"
                     onMouseDown={(e) => {
                       e.preventDefault();
-                      openSearchResult(item.type);
+                      openSearchResult(item);
                     }}
                   >
-                    {item.icon ? (
-                      <img
-                        src={item.icon}
-                        alt={item.name}
-                        className="w-5 h-5 object-contain"
-                        onError={(e) => { e.target.style.display = "none"; }}
-                      />
-                    ) : (
-                      <div className="w-5 h-5 rounded bg-blue-500/20 flex items-center justify-center">
-                        <Search size={10} className="text-blue-500" />
-                      </div>
+                    <div className="flex items-center gap-3 flex-1">
+                      {item.icon ? (
+                        <img
+                          src={item.icon}
+                          alt={item.name}
+                          className="w-5 h-5 object-contain"
+                          onError={(e) => { e.target.style.display = "none"; }}
+                        />
+                      ) : (
+                        <div className="w-5 h-5 rounded bg-blue-500/20 flex items-center justify-center">
+                          <Search size={10} className="text-blue-500" />
+                        </div>
+                      )}
+                      <span className="text-sm text-gray-800 dark:text-gray-100">{item.name}</span>
+                    </div>
+                    {item.category && (
+                      <span className="text-[10px] text-gray-400 dark:text-gray-500 font-medium px-1.5 py-0.5 rounded bg-gray-100 dark:bg-white/5">
+                        {item.category}
+                      </span>
                     )}
-                    <span className="text-sm text-gray-800 dark:text-gray-100">{item.name}</span>
                   </button>
                 ))}
               </>
@@ -152,6 +207,14 @@ const Navbar = () => {
           </div>
         )}
       </div>
+
+      {isSearchOpen && createPortal(
+        <div 
+          className={`search-backdrop ${isSearchOpen ? 'active' : ''}`} 
+          onMouseDown={() => setIsSearchOpen(false)}
+        />,
+        document.body
+      )}
 
       <div>
         <ul className="flex items-center gap-2">

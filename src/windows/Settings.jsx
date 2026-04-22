@@ -2,9 +2,12 @@ import windowWrapper from "#hoc/windowWrapper";
 import { WindowControls } from "#components";
 import useWallpaperStore from "#store/wallpaper";
 import useThemeStore from "#store/theme";
+import useAudioStore from "#store/audio";
+import useWindowStore from "#store/window";
 import clsx from "clsx";
-import { useState } from "react";
-import { Monitor, Sun, Moon, Image as ImageIcon, Palette } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Monitor, Sun, Moon, Image as ImageIcon, Palette, Volume2, VolumeX } from "lucide-react";
+import { Howl } from "howler";
 
 const wallpapers = [
   "/images/wallpaper.png",
@@ -20,7 +23,22 @@ const wallpapers = [
 const Settings = () => {
   const { wallpaper, setWallpaper } = useWallpaperStore();
   const { theme, setTheme } = useThemeStore();
+  const { volume, isMuted, setVolume, toggleMute } = useAudioStore();
+  const { windows } = useWindowStore();
+  
   const [activeTab, setActiveTab] = useState("appearance");
+  const settingsData = windows["settings"]?.data;
+
+  useEffect(() => {
+    if (settingsData === "appearance" || settingsData === "wallpaper" || settingsData === "audio") {
+      setActiveTab(settingsData);
+    }
+  }, [settingsData]);
+
+  const clickTestSound = useMemo(() => new Howl({
+    src: ['/sounds/click.wav'],
+    html5: true,
+  }), []);
 
   return (
     <>
@@ -58,6 +76,18 @@ const Settings = () => {
             >
               <ImageIcon size={18} />
               <span className="max-sm:hidden">Wallpaper</span>
+            </li>
+            <li 
+              className={clsx(
+                "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition-colors",
+                activeTab === "audio" 
+                  ? "bg-blue-500 text-white shadow-sm" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#333]"
+              )}
+              onClick={() => setActiveTab("audio")}
+            >
+              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              <span className="max-sm:hidden">Audio</span>
             </li>
           </ul>
         </div>
@@ -160,6 +190,53 @@ const Settings = () => {
                       )}
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "audio" && (
+            <div className="animate-in fade-in duration-300">
+              <h2 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-100 transition-colors">Audio</h2>
+              
+              <div className="bg-white dark:bg-[#2A2A2A] rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm transition-colors duration-300">
+                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">
+                  System Volume
+                </h3>
+                
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-800 dark:text-gray-200">Mute Sound</h4>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Turn off all system UI sounds.</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" checked={isMuted} onChange={toggleMute} />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500"></div>
+                    </label>
+                  </div>
+                  
+                  <div className={clsx("space-y-3 transition-opacity", isMuted ? "opacity-50 pointer-events-none" : "opacity-100")}>
+                    <div className="flex justify-between items-center">
+                      <h4 className="text-sm font-medium text-gray-800 dark:text-gray-200">Output Volume</h4>
+                      <span className="text-sm font-semibold text-blue-500">{Math.round(volume * 100)}%</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <VolumeX size={16} className="text-gray-400" />
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="1" 
+                        step="0.01" 
+                        value={volume}
+                        onChange={(e) => setVolume(parseFloat(e.target.value))}
+                        onMouseUp={() => !isMuted && clickTestSound.play()}
+                        onTouchEnd={() => !isMuted && clickTestSound.play()}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500"
+                      />
+                      <Volume2 size={16} className="text-gray-400" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

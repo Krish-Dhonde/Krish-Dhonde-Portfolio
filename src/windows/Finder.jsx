@@ -55,20 +55,60 @@ const Finder = () => {
     </div>
   );
 
+  const breadcrumbs = useMemo(() => {
+    const findPath = (target, current = null, path = []) => {
+      const currentLoc = current || locations;
+      if (!current) {
+        for (const loc of Object.values(locations)) {
+          const res = findPath(target, loc, [loc]);
+          if (res) return res;
+        }
+        return null;
+      }
+      if (current.id === target.id) return path;
+      if (current.children) {
+        for (const child of current.children) {
+          const res = findPath(target, child, [...path, child]);
+          if (res) return res;
+        }
+      }
+      return null;
+    };
+    return findPath(activeLocation);
+  }, [activeLocation]);
+
   return (
     <>
-      <div id="window-header">
-        <WindowControls target="finder" />
-        <div className="flex items-center gap-2 bg-white/50 dark:bg-black/20 px-2 py-1 rounded-md border border-gray-200 dark:border-white/10 w-48 transition-colors duration-300">
-          <Search size={14} className="text-gray-500" />
-          <input 
-            type="text" 
-            placeholder="Search" 
-            className="outline-none bg-transparent text-xs w-full dark:text-white placeholder:text-gray-400"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleTyping}
-          />
+      <div id="window-header" className="flex items-center gap-4">
+        <div className="flex items-center gap-4 shrink-0">
+          <WindowControls target="finder" />
+          <div className="flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-400 overflow-hidden max-w-[300px] whitespace-nowrap">
+            {breadcrumbs?.map((crumb, index) => (
+              <React.Fragment key={crumb.id}>
+                <span 
+                  className="hover:text-blue-500 hover:underline cursor-pointer transition-colors"
+                  onClick={() => setActiveLocation(crumb)}
+                >
+                  {crumb.name}
+                </span>
+                {index < breadcrumbs.length - 1 && <span className="text-gray-300 dark:text-white/20 select-none">/</span>}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+        
+        <div className="flex-1 flex justify-end">
+          <div className="flex items-center gap-2 bg-white/50 dark:bg-black/20 px-2 py-1 rounded-md border border-gray-200 dark:border-white/10 w-48 transition-colors duration-300">
+            <Search size={14} className="text-gray-500" />
+            <input 
+              type="text" 
+              placeholder="Search" 
+              className="outline-none bg-transparent text-xs w-full dark:text-white placeholder:text-gray-400"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleTyping}
+            />
+          </div>
         </div>
       </div>
       <div className="bg-white flex h-full w-full">
